@@ -55,6 +55,7 @@ const render = function () {
     items = items.filter(item => !item.checked);
   }
 
+
   /**
    * At this point, all filtering work has been 
    * done (or not done, if that's the current settings), 
@@ -81,7 +82,7 @@ const handleNewItemSubmit = function () {
 };
 
 const toggleCheckedForListItem = function (id) {
-  const foundItem = store.items.find(item => item.id === id);
+  const foundItem = store.items.filter(item => item.id === id);
   foundItem.checked = !foundItem.checked;
 };
 
@@ -94,17 +95,33 @@ const handleItemCheckClicked = function () {
 };
 
 const editName = function (id) {
-  const newName = $('.edit-name').val();
-  store.items.find(item => item.id === id).name = newName;
-  return render()
-}
+  const newName = $(this).parent().find('input').val();
+  store.items.find((item) => item.id === id).name = newName;
+  return render();
+};
+
 const handleEditItem = function () {
-  $('.js-shopping-list').on('click', '.js-item-edit', event => {
+  $('.js-shopping-list').on('click', '.js-item-edit', function (event) {
     console.log('edit button clicked!');
     const id = getItemIdFromElement(event.currentTarget);
-    return editName(id);
+    return editName.bind(this)(id);
+  });
+};
+/*const editName = function (id, newName) {
+  store.items.find(item => item.id === id).name = newName;
+}
+
+const handleEditItem = function () {
+  $('.js-shopping-list').on('click', '.js-item-edit', event => {
+    event.preventDefault();
+    console.log('edit button clicked!');
+    const id = getItemIdFromElement(event.currentTarget); 
+    const newName = $(event.currentTarget).find('.edit-name').val();
+    console.log(id,newName)
+    editName(id, newName);
+    render();
   })
- }
+ }*/
 
 const getItemIdFromElement = function (item) {
   return $(item)
